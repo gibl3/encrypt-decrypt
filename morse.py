@@ -50,15 +50,16 @@ class Morse:
     @classmethod
     def in_morse_chart(cls, char: str = None):
         try:
+            mod_char = char.strip().upper()
             if cls.is_morse(char):
                 return (
-                    cls.characters[cls.codes.index(char.strip())],
-                    cls.codes[cls.codes.index(char)],
+                    cls.characters[cls.codes.index(mod_char)],
+                    cls.codes[cls.codes.index(mod_char)],
                 )
 
             return (
-                cls.characters[cls.characters.index(char.upper())],
-                cls.morse_chart[char.upper()],
+                cls.characters[cls.characters.index(mod_char)],
+                cls.morse_chart[mod_char],
             )
 
         except (ValueError, TypeError, AttributeError):
@@ -71,8 +72,11 @@ class Morse:
     @classmethod
     def add_morse(cls, char: str = None, morse: str = None):
         if cls.is_morse(morse):
-            if (char, morse) not in cls.morse_chart.items():
-                cls.morse_chart.update({char: morse})
+            if (char.upper(), morse) not in cls.morse_chart.items():
+                cls.morse_chart.update({char.upper(): morse})
+
+                cls.characters = list(cls.morse_chart.keys())
+                cls.codes = list(cls.morse_chart.values())
 
 
 class MorseEncrypt(Morse):
@@ -122,8 +126,9 @@ class MorseDecrypt(Morse):
             return None
 
 
-# Morse.add_morse("a", "adgccb")
-print(Morse.in_morse_chart())
-# print(MorseEncrypt.encrypt("hello world"))
+Morse.add_morse("new", "-. . .--")
+print(Morse.morse_chart)
+print(Morse.in_morse_chart("n"))
+print(MorseEncrypt.encrypt("hello world"))
 # print(MorseDecrypt.decrypt("-.-- . .- ....  -... .. - -.-. ...."))
 # print(MorseDecrypt.decrypt_char())
