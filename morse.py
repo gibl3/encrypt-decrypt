@@ -196,7 +196,7 @@ class MorseDecrypt(Morse):
 def main():
     Morse.add_morse("GUI", ".---...-")
     print(f"In morse code chart: {Morse.in_morse_chart('GUI')}")
-    print(f"Encrypt: {MorseEncrypt.encrypt('HELLO GITHUB!')}")
+    print(f"Encrypt: {MorseEncrypt.encrypt('HELLO World!')}")
     print(
         f"Decrypt: {MorseDecrypt.decrypt('.... . .-.. .-.. ---  --. .. - .... ..- -... -.-.--')}"
     )
