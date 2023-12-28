@@ -45,6 +45,24 @@ class Morse:
         ")": "-.--.-",
     }
     characters = list(morse_chart.keys())
+    codes = list(morse_chart.values())
+
+    @classmethod
+    def in_morse_chart(cls, char: str = None):
+        try:
+            if cls.is_morse(char):
+                return (
+                    cls.characters[cls.codes.index(char.strip())],
+                    cls.codes[cls.codes.index(char)],
+                )
+
+            return (
+                cls.characters[cls.characters.index(char.upper())],
+                cls.morse_chart[char.upper()],
+            )
+
+        except (ValueError, TypeError, AttributeError):
+            return None
 
     @classmethod
     def is_morse(cls, morse) -> bool:
@@ -86,7 +104,7 @@ class MorseDecrypt(Morse):
             return (
                 " "
                 if char.strip() == ""
-                else cls.characters[list(cls.morse_chart.values()).index(char.strip())]
+                else cls.characters[cls.codes.index(char.strip())]
             )
         except (ValueError, AttributeError):
             return None
@@ -104,8 +122,8 @@ class MorseDecrypt(Morse):
             return None
 
 
-Morse.add_morse("a", "adgccb")
-print(Morse.is_morse(True))
-print(MorseEncrypt.encrypt("hello world"))
-print(MorseDecrypt.decrypt("-.-- . .- ....  -... .. - -.-. ...."))
+# Morse.add_morse("a", "adgccb")
+print(Morse.in_morse_chart())
+# print(MorseEncrypt.encrypt("hello world"))
+# print(MorseDecrypt.decrypt("-.-- . .- ....  -... .. - -.-. ...."))
 # print(MorseDecrypt.decrypt_char())
