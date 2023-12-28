@@ -106,6 +106,6 @@ class MorseDecrypt(Morse):
 
 Morse.add_morse("a", "adgccb")
 print(Morse.is_morse(True))
-print(MorseEncrypt.encrypt("yeah bitch"))
+print(MorseEncrypt.encrypt("hello world"))
 print(MorseDecrypt.decrypt("-.-- . .- ....  -... .. - -.-. ...."))
 # print(MorseDecrypt.decrypt_char())
