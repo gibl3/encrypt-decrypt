@@ -1,3 +1,9 @@
+class MorseCodeError(Exception):
+    def __init__(self, message):
+        self.message = message
+        super().__init__(self.message)
+
+
 class Morse:
     morse_chart = {
         "A": ".-",
@@ -49,6 +55,33 @@ class Morse:
     codes = list(morse_chart.values())
 
     @classmethod
+    def _clean_morse(cls, morse: str) -> str:
+        """Spaces in the start, between, or end will be removed."""
+
+        # Create a list of morse without leading and trailing spaces.
+        clean_morse = [char for char in morse.split(" ") if char.strip()]
+
+        # Join the morse with two spaces in between each element.
+        return "  ".join(clean_morse)
+
+    @classmethod
+    def is_morse(cls, morse: str = None) -> bool:
+        """Checks if morse is valid."""
+
+        try:
+            if not morse.strip():  # Check if empty string.
+                return False
+
+            # If a set of character or a character is present in {".", "-"},
+            # then set(char) <= valid_symbols will evaluate to True.
+            return all(
+                set(char) <= {".", "-"} for char in cls._clean_morse(morse).split(" ")
+            )
+
+        except AttributeError:
+            return False
+
+    @classmethod
     def in_morse_chart(cls, char: str = None) -> tuple[str, str] | None:
         """Checks if letter, number, symbol, or morse is in the chart."""
 
@@ -73,66 +106,35 @@ class Morse:
             return None
 
     @classmethod
-    def is_morse(cls, morse: str = None) -> bool:
-        """Checks if morse is valid."""
+    def _update_chart(cls, char, morse):
+        cls.morse_chart.update({char.upper(): cls._clean_morse(morse)})
 
-        try:
-            if not morse.strip():  # Check if empty string.
-                return False
-
-            # Split the cleaned morse code by spaces and loop over each character
-            for char in cls.clean_morse(morse).split(" "):
-                # Loop over each symbol in the character.
-                for symbol in char:
-                    if symbol not in [".", "-"]:
-                        return False
-            return True
-
-        except AttributeError:
-            return False
-
-    @classmethod
-    def clean_morse(cls, morse: str) -> str:
-        """Spaces in the start, between, or end will be removed."""
-
-        # Create a list of morse without leading and trailing spaces.
-        clean_morse = [char for char in morse.split(" ") if char.strip()]
-
-        # Join the morse with two spaces in between each element.
-        return "  ".join(clean_morse)
+        # Update each list to store the added item.
+        cls.characters = list(cls.morse_chart.keys())
+        cls.codes = list(cls.morse_chart.values())
 
     @classmethod
     def add_morse(cls, char: str = None, morse: str = None):
         """Adds morse code to the chart."""
 
-        try:
-            if cls.is_morse(morse):
-                # Check if the character and morse pair is not in the morse_chart.
-                if (char.upper(), morse) not in cls.morse_chart.items():
-                    # Add to morse chart.
-                    cls.morse_chart.update({char.upper(): cls.clean_morse(morse)})
+        if not cls.is_morse(morse):
+            raise MorseCodeError("Invalid or no morse code specified.")
 
-                    # Update each list to store the added item.
-                    cls.characters = list(cls.morse_chart.keys())
-                    cls.codes = list(cls.morse_chart.values())
+        if (char.upper(), morse) in cls.morse_chart.items():
+            raise MorseCodeError("Morse code already in the chart.")
 
-                else:
-                    print("Morse code already in the chart.")
-            else:
-                print("Invalid or no morse code specified.")
-
-        except TypeError as err:
-            print(err)
+        # Add to morse chart.
+        cls._update_chart(char, morse)
 
 
 class MorseEncrypt(Morse):
     @classmethod
-    def encrypt_letter(cls, char: str = None) -> str | None:
-        """Encrypts a letter."""
+    def encrypt_char(cls, char: str = None) -> str | None:
+        """Encrypts a character."""
 
         try:
             return (
-                " "
+                " " # Adds a trailing space.
                 if char.strip() == ""
                 else cls.morse_chart.get(char.upper().strip()) + " "
             )
@@ -144,13 +146,13 @@ class MorseEncrypt(Morse):
     def encrypt(cls, message: str = None) -> str | None:
         """Encrypts a message."""
 
-        try:
-            morse_message = ""
-            morse_message_li = [] # For debugging white spaces issue.
+        morse_message = ""
+        morse_message_li = []  # For debugging white spaces issue.
 
+        try:
             for char in message.upper():
-                morse_message += cls.encrypt_letter(char)
-                morse_message_li.append(cls.encrypt_letter(char))
+                morse_message += cls.encrypt_char(char)
+                morse_message_li.append(cls.encrypt_char(char))
 
             return morse_message
 
@@ -165,7 +167,7 @@ class MorseDecrypt(Morse):
 
         try:
             return (
-                " "  # Add space to each word.
+                " "  # Adds a trailing space.
                 if char.strip() == ""
                 else cls.characters[cls.codes.index(char.strip())]
             )
@@ -192,15 +194,15 @@ class MorseDecrypt(Morse):
 
 
 def main():
-    Morse.add_morse("GUI", "--.        ---.           ---            ")
+    Morse.add_morse("GUI", ".---...-")
     print(f"In morse code chart: {Morse.in_morse_chart('GUI')}")
-    print(f"Cleaned morse: {Morse.clean_morse('--.        ---.           ---')}")
-    print(f"Encrypt: {MorseEncrypt.encrypt('Hello GitHub!')}")
+    print(f"Encrypt: {MorseEncrypt.encrypt('HELLO GITHUB!')}")
     print(
         f"Decrypt: {MorseDecrypt.decrypt('.... . .-.. .-.. ---  --. .. - .... ..- -... -.-.--')}"
     )
-    print(f"Encrypt letter: {MorseEncrypt.encrypt_letter('d      ')}")
+    print(f"Encrypt character: {MorseEncrypt.encrypt_char('d')}")
     print(f"Decrypt letter: {MorseDecrypt.decrypt_morse('-..-        ')}")
+    print(f"Is morse: {Morse.is_morse('--.  ---.  ---')}")
 
 
 if __name__ == "__main__":
