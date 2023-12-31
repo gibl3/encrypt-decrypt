@@ -37,7 +37,7 @@ class Morse:
             "8": "---..",
             "9": "----.",
             "0": "-----",
-            ", ": "--..--",
+            ",": "--..--",
             ".": ".-.-.-",
             "?": "..--..",
             "!": "-.-.--",
@@ -205,12 +205,15 @@ def main():
     morse = Morse()
     morse.add_morse("67", "-.----..-.---")
     print(morse.in_morse_chart("67"))
+    morse.parse_morse("--       ---       .-.      ... .")  # Output: "-- --- .-. ... ."
 
     encrypt = MorseEncrypt(morse)
-    print(encrypt.encrypt("This is bus"))
+    print(encrypt.encrypt("Hello, world!"))
+    print(encrypt.encrypt_char(","))
 
     decrypt = MorseDecrypt(morse)
-    print(decrypt.decrypt("- .... .. ...  .. ...  -... ..- ..."))
+    print(decrypt.decrypt(".... . .-.. .-.. --- --..--  .-- --- .-. .-.. -.. -.-.--"))
+    print(decrypt.decrypt_morse(".--"))
 
 
 if __name__ == "__main__":
