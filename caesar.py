@@ -39,14 +39,14 @@ class CaesarEncrypt:
     def __init__(self, caesar) -> None:
         self._caesar = caesar
 
-    def encrypt(self, shift: int = 3, text: str = ""):
+    def encrypt(self, shift: int = 3, text: str = "", mode: int = 1):
         try:
-            return self._encrypt_text(shift, text.lower())
+            return self._encrypt_text(shift, text.lower(), mode)
 
         except (ValueError, AttributeError, TypeError):
             return None
 
-    def _encrypt_text(self, shift: int, text: str) -> str:
+    def _encrypt_text(self, shift: int, text: str, mode) -> str:
         encrypted_text = ""
 
         if not text.strip():
@@ -56,12 +56,12 @@ class CaesarEncrypt:
             if not letter.isalpha():
                 encrypted_text += letter
             else:
-                encrypted_text += self._encrypt_letter(letter, shift)
+                encrypted_text += self._encrypt_letter(letter, shift, mode)
 
         return encrypted_text
 
-    def _encrypt_letter(self, letter: str, shift: int) -> str:
-        sub_idx = (self._caesar.alphabet.index(letter) + shift) % self._caesar.alpha_len
+    def _encrypt_letter(self, letter: str, shift: int, mode: int) -> str:
+        sub_idx = (self._caesar.alphabet.index(letter) + shift * mode) % self._caesar.alpha_len
         return self._caesar.alphabet[sub_idx]
 
 
@@ -100,8 +100,8 @@ def main():
     encrypt = CaesarEncrypt(caesar)
     decrypt = CaesarDecrypt(caesar)
 
-    print(encrypt.encrypt(shift=21, text="Hello, world!"))
-    print(decrypt.decrypt(shift=21, text="czggj, rjmgy!"))
+    print(encrypt.encrypt(shift=21, text="czggj, rjmgy!", mode=-1))
+    # print(decrypt.decrypt(shift=21, text="czggj, rjmgy!"))
 
 
 if __name__ == "__main__":
