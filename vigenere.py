@@ -23,7 +23,7 @@ class Vigenere:
     def _get_key_char(self, key: str, key_idx: int):
         return key[key_idx % len(key)]
 
-    def shift_text(self, text: str, key: str, mode: int):
+    def _shift_text(self, text: str, key: str, mode: int):
         shifted_text = ""
         key_idx = 0
 
@@ -41,14 +41,14 @@ class Vigenere:
 
     def encrypt(self, text: str, key: str):
         try:
-            return self.shift_text(text, key, 1)
+            return self._shift_text(text, key, 1)
 
         except (ValueError, AttributeError, TypeError):
             return None
 
     def decrypt(self, text: str, key: str):
         try:
-            return self.shift_text(text, key, -1)
+            return self._shift_text(text, key, -1)
 
         except (ValueError, AttributeError, TypeError):
             return None
