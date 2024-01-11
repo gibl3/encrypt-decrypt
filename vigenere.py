@@ -23,7 +23,7 @@ class Vigenere:
     def _get_key_char(self, key: str, key_idx: int):
         return key[key_idx % len(key)]
 
-    def _shift_text(self, text: str, key: str, mode: int):
+    def shift_text(self, text: str, key: str, mode: int):
         shifted_text = ""
         key_idx = 0
 
@@ -41,14 +41,14 @@ class Vigenere:
 
     def encrypt(self, text: str, key: str):
         try:
-            return self._shift_text(text, key, 1)
+            return self.shift_text(text, key, 1)
 
         except (ValueError, AttributeError, TypeError):
             return None
 
     def decrypt(self, text: str, key: str):
         try:
-            return self._shift_text(text, key, -1)
+            return self.shift_text(text, key, -1)
 
         except (ValueError, AttributeError, TypeError):
             return None
@@ -56,10 +56,13 @@ class Vigenere:
 
 def main():
     key = "vigenere"
+    text = "Hello, world!"
+    cipher_text = "CMRPB, AFVGL!"
+
     vigenere = Vigenere()
 
-    print(vigenere.encrypt("Hello, world!", key))
-    print(vigenere.decrypt("CMRPB, AFVGL!", key))
+    print(vigenere.encrypt(text, key))
+    print(vigenere.decrypt(cipher_text, key))
 
 
 if __name__ == "__main__":
