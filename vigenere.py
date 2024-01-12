@@ -7,30 +7,30 @@ class Vigenere:
 
     def _shift_letter(self, mode, key, letter, key_idx):
         key_char = self._get_key_char(key, key_idx)
-        key_char_idx, letter_idx = self._get_indices(letter, key_char)
+        letter_idx, key_char_idx = self._get_indices(letter, key_char)
 
         new_idx = (letter_idx + key_char_idx * mode) % len(self._alphabet)
         return self._alphabet[new_idx]
 
     def _get_indices(self, letter, key_char):
         key_char_idx = self._alphabet.index(key_char.upper())
-
-        # get each letter of the text in the alphabet
         letter_idx = self._alphabet.index(letter)
 
-        return key_char_idx, letter_idx
+        return letter_idx, key_char_idx
 
     def _get_key_char(self, key: str, key_idx: int):
+        #  Returns the letter of the given key at the specified index.
         return key[key_idx % len(key)]
 
     def _shift_text(self, text: str, key: str, mode: int):
         shifted_text = ""
         key_idx = 0
+        text = text.upper()
 
         if not text.strip():
             return None
 
-        for letter in text.upper():
+        for letter in text:
             if not letter.isalpha():
                 shifted_text += letter
             else:
